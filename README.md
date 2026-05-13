@@ -123,7 +123,7 @@ As shown above, the number of images of train and valid datasets is not so large
  training set of our segmentation model.
 <br>
 <h3>2.2 Derivation of ImageMask-Dataset</h3>
-The folder structor of the 
+The folder structure of the PANTHER_Task2 is the following. 
 <pre>
 ./PANTHER_Task2
  ├─ImagesTr
@@ -138,7 +138,7 @@ The folder structor of the
 </pre>
 We used a simple Python script to generate our 
 PNG dataset with colorized masks from the pairs of volumes <b>"ImagesTr/*.mha"</b> and
-<b>"LabelTr/*.mha"</b> of PANTHER_Task2.
+<b>"LabelsTr/*.mha"</b> of PANTHER_Task2.
 For simplicity, we excluded all empty black mask and their corresponding image slices of the volumes,
 which were irrelevant to train our segmentation model.<br><br>
 
