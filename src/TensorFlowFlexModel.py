@@ -22,6 +22,8 @@
 # 2026/04/16 Addded infer3d method to support 3d volume inference.
 # 2026/04/27 Updated the infer3d method to index output filenames starting from 10001.
 
+# 2026/05/14 Updated the infer3d method to support an MHA volume file.
+# 2026/05/14 Added generate_maskoverkay method.
 
 import os
 os.environ["TF_FORCE_GPU_ALLOW_GROWTH"] = "true"
@@ -401,6 +403,22 @@ class TensorFlowFlexModel:
       print("Unsupported volume file")
     return volume
 
+  # 2026/05/14 Generate a maskoverly from an image_file and the corresponding mask file.
+  def generate_maskoverkay(self, image_filepath, mask_filepath):
+    if os.path.exists(image_filepath) and os.path.exists(mask_filepath):
+      image = cv2.imread(image_filepath)
+
+      mask  = cv2.imread(mask_filepath)
+      gray_mask = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY)
+      _, bin_mask = cv2.threshold(gray_mask, 0, 255, cv2.THRESH_BINARY)
+         
+      image[bin_mask==255] = (0,0,0)
+      mask_overlay = image + mask
+
+      return mask_overlay
+    else:
+      raise Exception("Not found an image or mask file")
+      
 
   def get_num_slices(self, shape):
     num = 0
@@ -513,6 +531,7 @@ class TensorFlowFlexModel:
           # dst = img * alpha + mask * beta + gamma
           #mask_overlay = cv2.addWeighted(slice, self.overlay_alpha, mask, self.overlay_beta, self.overlay_gamma)
           mask_overlay = slice + cv_mask
+    
           overlay_filepath = os.path.join(output_overlays_dir, slice_filename)
           cv2.imwrite(overlay_filepath, mask_overlay)
           print("=== Saved overlay {}".format(mask_filepath))
